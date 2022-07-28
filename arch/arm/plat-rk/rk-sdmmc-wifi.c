@@ -577,7 +577,7 @@ int rk29sdk_wifi_mac_addr(unsigned char *buf)
 
 	sprintf(mac_buf,"%02x:%02x:%02x:%02x:%02x:%02x",wifi_custom_mac_addr[0],wifi_custom_mac_addr[1],
 	wifi_custom_mac_addr[2],wifi_custom_mac_addr[3],wifi_custom_mac_addr[4],wifi_custom_mac_addr[5]);
-	printk("falsh wifi_custom_mac_addr=[%s]\n", mac_buf);
+	printk("flash -> wifi_custom_mac_addr=[%s]\n", mac_buf);
 
 	if (is_valid_ether_addr(wifi_custom_mac_addr)) {
 		if (2 == (wifi_custom_mac_addr[0] & 0x0F)) {
@@ -661,7 +661,7 @@ EXPORT_SYMBOL(rk29sdk_wifi_combo_get_GPS_SYNC_gpio);
     };
     static void __init mtk_combo_init(void)
     {
-        /* gpio number align target system¡¯s setting */
+        /* gpio number align target systems setting */
         gpio_request(mtk_wmt_pdata.pmu, "MT66XX PMUEN");
         gpio_request(mtk_wmt_pdata.rst, "MT66XX SYSRST");
         gpio_direction_output(mtk_wmt_pdata.pmu, 0);

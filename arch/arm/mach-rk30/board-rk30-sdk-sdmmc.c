@@ -1859,7 +1859,7 @@ int rk29sdk_wifi_mac_addr(unsigned char *buf)
 
     sprintf(mac_buf,"%02x:%02x:%02x:%02x:%02x:%02x",wifi_custom_mac_addr[0],wifi_custom_mac_addr[1],
     wifi_custom_mac_addr[2],wifi_custom_mac_addr[3],wifi_custom_mac_addr[4],wifi_custom_mac_addr[5]);
-    printk("falsh wifi_custom_mac_addr=[%s]\n", mac_buf);
+    printk("flash wifi_custom_mac_addr=[%s]\n", mac_buf);
 
     if (is_valid_ether_addr(wifi_custom_mac_addr)) {
 		if (2 == (wifi_custom_mac_addr[0] & 0x0F)) {
@@ -1868,7 +1868,7 @@ int rk29sdk_wifi_mac_addr(unsigned char *buf)
         }
     } else {
         printk("This mac address is not valid, ignored...\n");
-        return -1;
+        // return -1;
     }
 
 #if defined(CONFIG_RKWIFI)

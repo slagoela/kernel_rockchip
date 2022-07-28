@@ -996,35 +996,59 @@ static struct rfkill_rk_platform_data rfkill_rk_platdata = {
     .type               = RFKILL_TYPE_BLUETOOTH,
 
     .poweron_gpio       = { // BT_REG_ON
-		.io             = RK30_PIN3_PC7, //RK30_PIN3_PC7,
+#ifdef CONFIG_RFKILL_RK_POWERON_PIN3_PD1
+        .io             = RK30_PIN3_PD1,
+#else
+        .io             = INVALID_GPIO, //SAW - RK30_PIN3_PD1, //RK30_PIN3_PC7,
+#endif
         .enable         = GPIO_HIGH,
-        .iomux          = {
-            .name       = "bt_poweron",
-            .fgpio      = GPIO3_C7,
+        .iomux		= {
+	        .name	= "bt_poweron",
+#ifdef CONFIG_RFKILL_RK_POWERON_PIN3_PD1
+	        .fgpio      = GPIO3_D1,
+#else
+	        .fgpio      = GPIO3_C7,
+#endif
         },
     },
 
     .reset_gpio         = { // BT_RST
-        .io             = RK30_PIN3_PD1, // set io to INVALID_GPIO for disable it
+#ifdef CONFIG_RFKILL_RK_RESET_INVALID_GPIO
+        .io             = INVALID_GPIO,
+#else
+        .io             = RK30_PIN3_PD1, //SAW - INVALID_GPIO 
+#endif
         .enable         = GPIO_LOW,
         .iomux          = {
             .name       = "bt_reset",
             .fgpio      = GPIO3_D1,
-       },
+        },
     },
 
     .wake_gpio          = { // BT_WAKE, use to control bt's sleep and wakeup
-        .io             = RK30_PIN3_PC6, // set io to INVALID_GPIO for disable it
+#ifdef CONFIG_RFKILL_RK_WAKE_PIN3_PC7
+        .io             = RK30_PIN3_PC7,
+#else
+        .io             = RK30_PIN3_PC6, //SAW - RK30_PIN3_PC7, // set io to INVALID_GPIO for disable it
+#endif
         .enable         = GPIO_HIGH,
-        .iomux          = {
-            .name       = "bt_wake",
-            .fgpio      = GPIO3_C6,
-        },
+	.iomux		= {
+            .name	= "bt_wake",
+#ifdef CONFIG_RFKILL_RK_WAKE_PIN3_PC7
+	    .fgpio	= GPIO3_C7,
+#else
+	    .fgpio	= GPIO3_C6,
+#endif
+  	},
     },
 
     .wake_host_irq      = { // BT_HOST_WAKE, for bt wakeup host when it is in deep sleep
         .gpio           = {
-            .io         = RK30_PIN0_PA5, // set io to INVALID_GPIO for disable it
+#ifdef CONFIG_RFKILL_RK_WAKE_HOST_PIN3_PC6
+            .io         = RK30_PIN3_PC6,
+#else
+            .io         = RK30_PIN3_PC7, //SAW - RK30_PIN3_PC6, // set io to INVALID_GPIO for disable it
+#endif
             .enable     = GPIO_LOW,      // set GPIO_LOW for falling, set 0 for rising
             .iomux      = {
                 .name   = NULL,
@@ -1056,11 +1080,11 @@ static struct platform_device device_rfkill_rk = {
 static struct tcc_bt_platform_data tcc_bt_platdata = {
 
     .power_gpio   = { // ldoon
-		#ifdef CONFIG_IMITO_QX1
-        .io             =  RK30_PIN3_PD1,
-		#else
-		.io             =  RK30_PIN3_PC7,
-		#endif
+#if defined(CONFIG_TCC_BT_DEV_POWER_PIN3_PD1) || defined(CONFIG_IMITO_QX1)
+        .io             = RK30_PIN3_PD1,
+#else
+        .io             = RK30_PIN3_PC7,
+#endif
         .enable         = GPIO_HIGH,
         .iomux          = {
             .name       = NULL,
@@ -1068,11 +1092,11 @@ static struct tcc_bt_platform_data tcc_bt_platdata = {
         },
 
     .wake_host_gpio  = { // BT_HOST_WAKE, for bt wakeup host when it is in deep sleep
-		#ifdef CONFIG_IMITO_QX1
-		.io			= RK30_PIN3_PC6,
-		#else
+#if defined(CONFIG_IMITO_QX1)
+	    .io	     = RK30_PIN3_PC6,
+#else
         .io         = RK30_PIN3_PD0, // set io to INVALID_GPIO for disable it
-		#endif
+#endif
         .enable     = IRQF_TRIGGER_RISING,// set IRQF_TRIGGER_FALLING for falling, set IRQF_TRIGGER_RISING for rising
         .iomux      = {
             .name       = NULL,
@@ -1529,13 +1553,13 @@ static struct pmu_info  act8846_dcdc_info[] = {
 	},
 	{
 		.name          = "act_dcdc4",   //vccio
-		#ifdef CONFIG_IMITO_QX1
-		.min_uv          = 3000000,
+#if defined(CONFIG_ACT8846_DCDC4_30V) || defined(CONFIG_IMITO_QX1)
+		.min_uv         = 3000000,
 		.max_uv         = 3000000,
-		#else
-		.min_uv          = 3300000,
+#else
+		.min_uv         = 3300000,
 		.max_uv         = 3300000,
-		#endif
+#endif
 		#ifdef CONFIG_ACT8846_SUPPORT_RESET
 		.suspend_vol  =  3000000,
 		#else
@@ -1572,13 +1596,13 @@ static  struct pmu_info  act8846_ldo_info[] = {
 	},
 	{
 		.name          = "act_ldo6",   //vcc_jetta
-		#ifdef CONFIG_IMITO_QX1
-		.min_uv          = 3300000,
-		.max_uv         = 3300000,
-		#else
-		.min_uv          = 1800000,
+#if defined(CONFIG_ACT8846_LDO6_18V)
+		.min_uv         = 1800000,
 		.max_uv         = 1800000,
-		#endif
+#else
+		.min_uv         = 3300000,
+		.max_uv         = 3300000,
+#endif
 	},
 	{
 		.name          = "act_ldo7",   //vcc18
